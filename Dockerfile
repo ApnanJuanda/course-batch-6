@@ -2,6 +2,8 @@
 
 FROM golang:1.19.3-alpine
 
+ARG PORT
+
 WORKDIR /app
 
 COPY go.mod ./
