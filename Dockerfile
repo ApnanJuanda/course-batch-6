@@ -1,20 +1,17 @@
-# Get Golang image from docker hub
-FROM golang:1.19
+# syntax=docker/dockerfile:1
 
-# Define the working directory
+FROM golang:1.19.3-alpine
+
 WORKDIR /app
 
-# Copy all files to container
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+
 COPY . .
 
-# Install all dependencies
-RUN go mod tidy
+RUN go build app/main.go
 
-# Build the go project to binary
-RUN go build -o /app/exercise-api app/main.go
-
-# Expose port 1234, then localhost can access the container 
 EXPOSE 1234
 
-# Run the binary build of go project
-CMD [ "/app/exercise-api" ]
+CMD [ "/app/main" ]
