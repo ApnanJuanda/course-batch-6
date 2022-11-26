@@ -12,6 +12,6 @@ COPY . .
 
 RUN go build app/main.go
 
-EXPOSE 1234
+EXPOSE ${PORT}
 
 CMD [ "/app/main" ]

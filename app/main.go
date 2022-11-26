@@ -1,13 +1,15 @@
 package main
 
 import (
+	answerHandler "exercise/internal/app/answer/handler"
 	"exercise/internal/app/database"
 	"exercise/internal/app/exercise/handler"
-	userHandler "exercise/internal/app/user/handler"
 	questionHandler "exercise/internal/app/question/handler"
-	answerHandler "exercise/internal/app/answer/handler"
+	userHandler "exercise/internal/app/user/handler"
 	"exercise/internal/pkg/middleware"
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +21,7 @@ func main() {
 			"message": "hello world",
 		})
 	})
-
+	
 	db := database.NewConnDatabase()
 	exerciseHandler := handler.NewExerciseHandler(db)
 	userHandler := userHandler.NewUserHandler(db)
@@ -33,5 +35,7 @@ func main() {
 	r.POST("/exercises", middleware.WithAuh(), exerciseHandler.CreateNewExercise)
 	r.POST("/exercises/:exerciseId/questions", middleware.WithAuh(), questionHandler.CreateNewQuestion)
 	r.POST("/exercises/:exerciseId/questions/:questionId/answer", middleware.WithAuh(), answerHandler.CreateNewAnswer)
-	r.Run(":1234")
+	port := os.Getenv("PORT")
+	runWithPort := fmt.Sprintf("0.0.0.0:%s", port)
+	r.Run(runWithPort)
 }
